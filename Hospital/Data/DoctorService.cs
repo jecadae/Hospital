@@ -77,7 +77,11 @@ public class DoctorService
         }
 
         result.Status = true;
-        
+        //Ставим то что записи удалены
+        await _context.Appointments.Where(x => x.DoctorId == result.Id).ExecuteUpdateAsync(s => s.SetProperty(t => t.Status, t => !t.Status ));
+        //Удаляем расписание(Команду здесть надо поменять)
+        //TODO
+        await _context.Schedules.Where(x => x.DoctorId == result.Id).ExecuteUpdateAsync(s => s.SetProperty(t => t.Status, t => !t.Status ));
         await _context.SaveChangesAsync();
         return true;
     }
