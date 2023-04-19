@@ -74,7 +74,7 @@ public class PatientService
     
     
     /// <summary>
-    /// 
+    /// Так как при удалении врача все записи тоже обнуляются мы достаем только те что не удалены и те чье время больше текущего
     /// </summary>
     /// <param name="polis"></param>
     /// <returns></returns>

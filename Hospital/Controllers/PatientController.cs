@@ -134,7 +134,7 @@ public class PatientController: ControllerBase
         {
             var patient = await _patientService.GetPatientAsync(polis);
             if (patient.Name == null) return NotFound();
-            var Appointments = await _patientService.GetAllPatientAppointmentAsync(polis);
+            var Appointments = await _patientService.GetAllPatientAppointmentToVisitAsync(polis);
 
             return Ok(Appointments.Select(d => new AppontmentDto()
                 {
@@ -148,8 +148,4 @@ public class PatientController: ControllerBase
         }
         
 
-
-
-
-
-    }
+}
