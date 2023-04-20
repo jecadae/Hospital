@@ -1,3 +1,4 @@
+using AutoMapper;
 using Hospital.Data;
 using Hospital.DTO;
 using Hospital.Entity;
@@ -10,10 +11,12 @@ namespace Hospital.Controllers;
 public class DoctorsController : ControllerBase
 {
     private readonly DoctorService _doctorService;
+    private readonly IMapper _mapper;
 
-    public DoctorsController(DoctorService doctorService)
+    public DoctorsController(DoctorService doctorService, IMapper mapper)
     {
         _doctorService = doctorService;
+        _mapper = mapper;
     }
 
 
@@ -21,13 +24,9 @@ public class DoctorsController : ControllerBase
     [Route("doctors")]
     public async Task<List<DoctorDto>> GetDoctorsAsync()
     {
-        var doctors = await _doctorService.GetDoctorsAsync();
-        return doctors.Select(d => new DoctorDto
-        {
-            Id = d.Id,
-            DoctorType = d.DoctorType,
-            ScheduleId = d.ScheduleId
-        }).ToList();
+        var doctors = await _doctorService.GetAllAsync();
+
+        return _mapper.Map<List<DoctorDto>>(doctors);
     }
 
 
@@ -35,14 +34,9 @@ public class DoctorsController : ControllerBase
     [Route("doctor/{id}")]
     public async Task<IActionResult> GetDoctorAsync(int id)
     {
-        var doctor = await _doctorService.GetDoctorAsync(id);
+        var doctor = await _doctorService.GetByIdAsync(id);
         if (doctor == null) return NotFound();
-        var doctorDto = new DoctorDto
-        {
-            Id = doctor.Id,
-            DoctorType = doctor.DoctorType,
-            ScheduleId = doctor.ScheduleId
-        };
+        var doctorDto = _mapper.Map<DoctorDto>(doctor);
         return Ok(doctorDto);
     }
 
@@ -51,13 +45,8 @@ public class DoctorsController : ControllerBase
     public async Task<IActionResult> CreateDoctor(DoctorDto doctorDto)
     {
         if (!ModelState.IsValid) return BadRequest();
-        var doctor = new Doctor
-        {
-            Id = doctorDto.Id,
-            DoctorType = doctorDto.DoctorType,
-            ScheduleId = doctorDto.ScheduleId
-        };
-        await _doctorService.AddDoctorAsync(doctor);
+        var doctor = _mapper.Map<Doctor>(doctorDto);
+        await _doctorService.CreateAsync(doctor);
         return Ok();
     }
 
@@ -67,13 +56,8 @@ public class DoctorsController : ControllerBase
     {
         if (!ModelState.IsValid) return BadRequest();
 
-        var doctor = new Doctor
-        {
-            Id = doctorDto.Id,
-            DoctorType = doctorDto.DoctorType,
-            ScheduleId = doctorDto.ScheduleId
-        };
-        var result = await _doctorService.UpdateDoctorAsync(id, doctor);
+        var doctor = _mapper.Map<Doctor>(doctorDto);
+        var result = await _doctorService.UpdateAsync(id, doctor);
         if (result == false) return NotFound();
         return Ok();
     }
@@ -82,7 +66,7 @@ public class DoctorsController : ControllerBase
     [Route("doctor/{id}")]
     public async Task<IActionResult> DeleteDoctorAsync(int id)
     {
-        var result = await _doctorService.RemoveDoctorAsync(id);
+        var result = await _doctorService.DeleteAsync(id);
         if (result == false) return NotFound();
         return Ok();
     }

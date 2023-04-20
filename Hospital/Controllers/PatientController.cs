@@ -1,3 +1,4 @@
+using AutoMapper;
 using Hospital.Data;
 using Hospital.DTO;
 using Hospital.Entity;
@@ -8,11 +9,13 @@ namespace Hospital.Controllers;
 [Route("[controller]")]
 public class PatientController : ControllerBase
 {
+    private readonly IMapper _mapper;
     private readonly PatientService _patientService;
 
-    public PatientController(PatientService patientService)
+    public PatientController(PatientService patientService, IMapper mapper)
     {
         _patientService = patientService;
+        _mapper = mapper;
     }
 
 
@@ -20,27 +23,17 @@ public class PatientController : ControllerBase
     [Route("patients")]
     public async Task<List<PatientDto>> GetPatientsAsync()
     {
-        var patients = await _patientService.GetPatientsAsync();
-        return patients.Select(d => new PatientDto
-        {
-            Polis = d.Polis,
-            Name = d.Name,
-            Age = d.Age
-        }).ToList();
+        var patients = await _patientService.GetAllAsync();
+        return _mapper.Map<List<PatientDto>>(patients);
     }
 
     [HttpGet]
-    [Route("patient/{polis}")]
-    public async Task<IActionResult> GetPatientAsync(long polis)
+    [Route("patient/{InsuranceNumberId}")]
+    public async Task<IActionResult> GetPatientAsync(int InsuranceNumberId)
     {
-        var patient = await _patientService.GetPatientAsync(polis);
+        var patient = await _patientService.GetByIdAsync(InsuranceNumberId);
         if (patient == null) return NotFound();
-        var patientDto = new PatientDto
-        {
-            Polis = patient.Polis,
-            Name = patient.Name,
-            Age = patient.Age
-        };
+        var patientDto = _mapper.Map<PatientDto>(patient);
         return Ok(patientDto);
     }
 
@@ -51,87 +44,61 @@ public class PatientController : ControllerBase
     {
         if (!ModelState.IsValid) return BadRequest();
 
-        var patient = new Patient
-        {
-            Polis = patientDto.Polis,
-            Name = patientDto.Name,
-            Age = patientDto.Age
-        };
+        var patient = _mapper.Map<Patient>(patientDto);
 
 
-        await _patientService.AddPatientAsync(patient);
+        await _patientService.CreateAsync(patient);
         return Ok();
     }
 
     [HttpPut]
-    [Route("patient/{polis}")]
-    public async Task<IActionResult> PutPatientAsync(long polis, PatientDto patientDto)
+    [Route("patient/{InsuranceNumberId}")]
+    public async Task<IActionResult> PutPatientAsync(int InsuranceNumberId, PatientDto patientDto)
     {
         if (!ModelState.IsValid) return BadRequest();
 
-        var patient = new Patient
-        {
-            Polis = patientDto.Polis,
-            Name = patientDto.Name,
-            Age = patientDto.Age
-        };
+        var patient = _mapper.Map<Patient>(patientDto);
 
-        var result = await _patientService.UpdatePatientAsync(polis, patient);
+        var result = await _patientService.UpdateAsync(InsuranceNumberId, patient);
         if (result == false) return NotFound();
         return Ok();
     }
 
     [HttpDelete]
-    [Route("patient/{polis}")]
-    public async Task<IActionResult> DeleteDoctorAsync(long polis)
+    [Route("patient/{InsuranceNumberId}")]
+    public async Task<IActionResult> DeleteDoctorAsync(int InsuranceNumberId)
     {
-        var result = await _patientService.RemovePatientAsync(polis);
+        var result = await _patientService.DeleteAsync(InsuranceNumberId);
         if (result == false) return NotFound();
         return Ok();
     }
 
 
     [HttpGet]
-    [Route("Appointment/{polis}")]
-    public async Task<IActionResult> AllPatientAppointmentAsync(long polis)
+    [Route("Appointment/{InsuranceNumberId}")]
+    public async Task<IActionResult> AllPatientAppointmentAsync(int InsuranceNumberId)
     {
-        var patient = await _patientService.GetPatientAsync(polis);
+        var patient = await _patientService.GetByIdAsync(InsuranceNumberId);
         if (patient.Name == null) return NotFound();
-        var Appointments = await _patientService.GetAllPatientAppointmentAsync(polis);
+        var appointments = await _patientService.GetAllPatientAppointmentAsync(InsuranceNumberId);
 
-        return Ok(Appointments.Select(d => new AppointmentDto
-            {
-                Id = d.Id,
-                DoctorId = d.DoctorId,
-                PatientPolis = d.PatientPolis,
-                StartVisit = d.StartVisit,
-                EndVisit = d.EndVisit
-            }
-        ).ToList());
+        return Ok(_mapper.Map<List<AppointmentDto>>(appointments));
     }
 
     /// <summary>
     ///     Все записи что предстоит посетить
     /// </summary>
-    /// <param name="polis"> Полис пациента</param>
+    /// <param name="InsuranceNumberId"> Полис пациента</param>
     /// <returns> Лист записей</returns>
     [HttpGet]
-    [Route("AppointmentsToVisit/{polis}")]
-    public async Task<IActionResult> AllPatientAppointmentToVisitAsync(long polis)
+    [Route("AppointmentsToVisit/{InsuranceNumberId}")]
+    public async Task<IActionResult> AllPatientAppointmentToVisitAsync(int InsuranceNumberId)
     {
-        var patient = await _patientService.GetPatientAsync(polis);
+        var patient = await _patientService.GetByIdAsync(InsuranceNumberId);
         if (patient.Name == null) return NotFound();
-        var Appointments = await _patientService.GetAllPatientAppointmentToVisitAsync(polis);
+        var appointments = await _patientService.GetAllPatientAppointmentToVisitAsync(InsuranceNumberId);
 
-        return Ok(Appointments.Select(d => new AppointmentDto
-            {
-                Id = d.Id,
-                DoctorId = d.DoctorId,
-                PatientPolis = d.PatientPolis,
-                StartVisit = d.StartVisit,
-                EndVisit = d.EndVisit
-            }
-        ).ToList());
+        return Ok(_mapper.Map<List<AppointmentDto>>(appointments));
     }
 
     /// <summary>
@@ -143,20 +110,21 @@ public class PatientController : ControllerBase
     [Route("Appointment")]
     public async Task<IActionResult> CreateAppointmentAsync(AppointmentDto appointmentDto)
     {
-        var appointment = new Appointment
-        {
-            Id = null,
-            DoctorId = appointmentDto.DoctorId,
-            PatientPolis = appointmentDto.PatientPolis,
-            Status = false,
-            StartVisit = appointmentDto.StartVisit,
-            EndVisit = appointmentDto.EndVisit
-        };
+        var appointment = _mapper.Map<Appointment>(appointmentDto);
         var result = await _patientService.CreateAppointmentAsync(appointment);
         if (result == false) return BadRequest();
         return Ok();
     }
 
-    //[HttpDelete]
-    //[Route("  ")]
+    [HttpDelete]
+    [Route("Appointment/{id}")]
+    public async Task<IActionResult> RemoveAppointmentAsync(int id)
+    {
+        var result = await _patientService.DeleteAppointmentAsync(id);
+        if (result == false) return BadRequest();
+        return Ok();
+    }
+    
+    
+    
 }

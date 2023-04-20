@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.Data;
 
-public class DoctorService
+public class DoctorService : IHospitalService<Doctor>
 {
     private readonly AppDbContext _context;
 
@@ -16,9 +16,9 @@ public class DoctorService
     ///     Получить всех докторов
     /// </summary>
     /// <returns>Массив докторов</returns>
-    public async Task<Doctor[]> GetDoctorsAsync()
+    public async Task<List<Doctor>> GetAllAsync()
     {
-        return await _context.Doctors.AsNoTracking().Where(x => x.Status == false).ToArrayAsync();
+        return await _context.Doctors.AsNoTracking().Where(x => x.IsFired == false).ToListAsync();
     }
 
     /// <summary>
@@ -26,9 +26,10 @@ public class DoctorService
     /// </summary>
     /// <param name="id"> id доктора</param>
     /// <returns></returns>
-    public async Task<Doctor> GetDoctorAsync(int id)
+    public async Task<Doctor?> GetByIdAsync(int id)
     {
-        return await _context.Doctors.AsNoTracking().Where(x => x.Status == false).FirstOrDefaultAsync(x => x.Id == id);
+        return await _context.Doctors.AsNoTracking().Where(x => x.IsFired == false)
+            .FirstOrDefaultAsync(x => x.Id == id);
     }
 
     /// <summary>
@@ -36,7 +37,7 @@ public class DoctorService
     /// </summary>
     /// <param name="doctor">Поле доктора</param>
     /// <returns></returns>
-    public async Task<bool> AddDoctorAsync(Doctor doctor)
+    public async Task<bool> CreateAsync(Doctor doctor)
     {
         await _context.Doctors.AddAsync(doctor);
         await _context.SaveChangesAsync();
@@ -49,9 +50,9 @@ public class DoctorService
     /// <param name="id"> Id доктора которого меняем</param>
     /// <param name="doctor">новая модель доктора </param>
     /// <returns></returns>
-    public async Task<bool> UpdateDoctorAsync(int id, Doctor doctor)
+    public async Task<bool> UpdateAsync(int id, Doctor doctor)
     {
-        var result = await _context.Doctors.Where(x => x.Status == false).FirstOrDefaultAsync(x => x.Id == id);
+        var result = await _context.Doctors.Where(x => x.IsFired == false).FirstOrDefaultAsync(x => x.Id == id);
         if (result == null) return false;
 
         result.DoctorType = doctor.DoctorType;
@@ -64,26 +65,26 @@ public class DoctorService
     /// </summary>
     /// <param name="id">id удаляемого доктора </param>
     /// <returns>true если успех, false если доктор был не найден</returns>
-    public async Task<bool> RemoveDoctorAsync(int id)
+    public async Task<bool> DeleteAsync(int id)
     {
-        var result = await _context.Doctors.Where(x => x.Status == false).FirstOrDefaultAsync(x => x.Id == id);
+        var result = await _context.Doctors.Where(x => x.IsFired == false).FirstOrDefaultAsync(x => x.Id == id);
         if (result == null) return false;
 
-        result.Status = true;
+        result.IsFired = true;
         //Ставим то что записи удалены
         await _context.Appointments.Where(x => x.DoctorId == result.Id)
-            .ExecuteUpdateAsync(s => s.SetProperty(t => t.Status, t => !t.Status));
+            .ExecuteUpdateAsync(s => s.SetProperty(t => t.IsFired, t => !t.IsFired));
         //Удаляем расписание(Команду здесть надо поменять)
         //TODO
         await _context.Schedules.Where(x => x.DoctorId == result.Id)
-            .ExecuteUpdateAsync(s => s.SetProperty(t => t.Status, t => !t.Status));
+            .ExecuteUpdateAsync(s => s.SetProperty(t => t.IsFired, t => !t.IsFired));
         await _context.SaveChangesAsync();
         return true;
     }
 
-    public async Task<Schedule> GetDoctorScheduleAsync(int doctorId)
+    public async Task<Schedule?> GetDoctorScheduleAsync(int doctorId)
     {
-        var schedule = await _context.Schedules.FirstOrDefaultAsync(a => a.Status == false && a.DoctorId == doctorId);
+        var schedule = await _context.Schedules.FirstOrDefaultAsync(a => a.IsFired == false && a.DoctorId == doctorId);
         return schedule;
     }
 }

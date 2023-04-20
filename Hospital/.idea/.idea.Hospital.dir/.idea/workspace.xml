@@ -12,6 +12,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< Updated upstream
     <list default="true" id="b4f7c4aa-1ad2-4f41-b486-1bb381ef0b65" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Hospital.dir/.idea/dataSources.local.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Hospital.dir/.idea/dataSources/c9943679-f370-4500-bbe0-60a0fbc96f0a.xml" beforeDir="false" />
@@ -35,6 +36,9 @@
       <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/appsettings.json" afterDir="false" />
     </list>
+=======
+    <list default="true" id="b4f7c4aa-1ad2-4f41-b486-1bb381ef0b65" name="Changes" comment="" />
+>>>>>>> Stashed changes
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

@@ -1,9 +1,6 @@
-namespace Hospital.Entity;
+namespace Hospital.DTO;
 
-/// <summary>
-///     Hcfc
-/// </summary>
-public class Schedule
+public class ScheduleDto
 {
     public int DoctorId { get; set; }
     public int Id { get; set; }
@@ -13,7 +10,4 @@ public class Schedule
     public DateTime EndLunch { get; set; }
     public int ReceptionInterval { get; set; }
     public List<DayOfWeek> WeekDay { get; set; }
-
-    public Doctor Doctor { get; set; }
-    public bool IsFired { get; set; }
 }

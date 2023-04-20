@@ -24,11 +24,11 @@ namespace Hospital.Migrations
 
             modelBuilder.Entity("Hospital.Entity.Appointment", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
 
                     b.Property<int>("DoctorId")
                         .HasColumnType("integer");
@@ -36,20 +36,23 @@ namespace Hospital.Migrations
                     b.Property<DateTime>("EndVisit")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("PatientPolis")
+                    b.Property<long>("InsuranceNumberId")
                         .HasColumnType("bigint");
+
+                    b.Property<bool>("IsFired")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("PatientInsuranceNumberId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("StartVisit")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DoctorId");
 
-                    b.HasIndex("PatientPolis");
+                    b.HasIndex("PatientInsuranceNumberId");
 
                     b.ToTable("Appointments");
                 });
@@ -65,11 +68,11 @@ namespace Hospital.Migrations
                     b.Property<int>("DoctorType")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("IsFired")
+                        .HasColumnType("boolean");
+
                     b.Property<int?>("ScheduleId")
                         .HasColumnType("integer");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
@@ -78,23 +81,23 @@ namespace Hospital.Migrations
 
             modelBuilder.Entity("Hospital.Entity.Patient", b =>
                 {
-                    b.Property<long>("Polis")
+                    b.Property<int>("InsuranceNumberId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Polis"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("InsuranceNumberId"));
 
                     b.Property<int>("Age")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("IsFired")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("boolean");
-
-                    b.HasKey("Polis");
+                    b.HasKey("InsuranceNumberId");
 
                     b.ToTable("Patients");
                 });
@@ -119,20 +122,21 @@ namespace Hospital.Migrations
                     b.Property<int>("DoctorId1")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("EndDame")
+                    b.Property<DateTime>("EndDay")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("EndLunch")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("Status")
+                    b.Property<bool>("IsFired")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("TimeValue")
+                    b.Property<int>("ReceptionInterval")
                         .HasColumnType("integer");
 
-                    b.Property<int>("WeekDay")
-                        .HasColumnType("integer");
+                    b.Property<int[]>("WeekDay")
+                        .IsRequired()
+                        .HasColumnType("integer[]");
 
                     b.HasKey("Id");
 
@@ -151,7 +155,7 @@ namespace Hospital.Migrations
 
                     b.HasOne("Hospital.Entity.Patient", "Patient")
                         .WithMany()
-                        .HasForeignKey("PatientPolis")
+                        .HasForeignKey("PatientInsuranceNumberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
