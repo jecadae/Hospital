@@ -1,13 +1,17 @@
+using System.Text.Encodings.Web;
+using System.Text.Json;
 using Hospital.Data;
 using Hospital.DTO;
 using Hospital.Entity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.WebEncoders.Testing;
 
 namespace Hospital.Controllers;
 
 [ApiController]
+
 [Route("[controller]")]
-public class DoctorsController : ControllerBase
+public class DoctorsController: ControllerBase
 {
     private readonly DoctorService _doctorService;
 
@@ -22,40 +26,46 @@ public class DoctorsController : ControllerBase
     public async Task<List<DoctorDto>> GetDoctorsAsync()
     {
         var doctors = await _doctorService.GetDoctorsAsync();
-        return doctors.Select(d => new DoctorDto
+        return doctors.Select(d => new DoctorDto()
         {
             Id = d.Id,
             DoctorType = d.DoctorType,
-            ScheduleId = d.ScheduleId
+            ScheduleId = d.ScheduleId,
         }).ToList();
+ 
     }
-
-
+    
+    
     [HttpGet]
     [Route("doctor/{id}")]
     public async Task<IActionResult> GetDoctorAsync(int id)
     {
         var doctor = await _doctorService.GetDoctorAsync(id);
         if (doctor == null) return NotFound();
-        var doctorDto = new DoctorDto
+        var doctorDto = new DoctorDto()
         {
             Id = doctor.Id,
             DoctorType = doctor.DoctorType,
             ScheduleId = doctor.ScheduleId
+
         };
-        return Ok(doctorDto);
+        return  Ok(doctorDto);
     }
 
     [HttpPost]
     [Route("doctor")]
     public async Task<IActionResult> CreateDoctor(DoctorDto doctorDto)
-    {
-        if (!ModelState.IsValid) return BadRequest();
-        var doctor = new Doctor
+    {   
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+        var doctor = new Doctor()
         {
             Id = doctorDto.Id,
             DoctorType = doctorDto.DoctorType,
             ScheduleId = doctorDto.ScheduleId
+            
         };
         await _doctorService.AddDoctorAsync(doctor);
         return Ok();
@@ -65,17 +75,24 @@ public class DoctorsController : ControllerBase
     [Route("doctor/{id}")]
     public async Task<IActionResult> PutDoctorAsync(int id, DoctorDto doctorDto)
     {
-        if (!ModelState.IsValid) return BadRequest();
-
-        var doctor = new Doctor
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+        
+        var doctor = new Doctor()
         {
             Id = doctorDto.Id,
             DoctorType = doctorDto.DoctorType,
             ScheduleId = doctorDto.ScheduleId
+            
         };
-        var result = await _doctorService.UpdateDoctorAsync(id, doctor);
+        var result = await  _doctorService.UpdateDoctorAsync(id, doctor);
         if (result == false) return NotFound();
         return Ok();
+
+
+
     }
 
     [HttpDelete]
@@ -86,4 +103,7 @@ public class DoctorsController : ControllerBase
         if (result == false) return NotFound();
         return Ok();
     }
+
+
+
 }
