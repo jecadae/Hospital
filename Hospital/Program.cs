@@ -2,7 +2,7 @@ using Hospital.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-string DefaultString = builder.Configuration.GetConnectionString("DefaultString");
+var DefaultString = builder.Configuration.GetConnectionString("DefaultString");
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(DefaultString));
 builder.Services.AddControllers();
@@ -17,6 +17,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();

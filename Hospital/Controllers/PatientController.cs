@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Hospital.Controllers;
 
 [Route("[controller]")]
-public class PatientController: ControllerBase
+public class PatientController : ControllerBase
 {
     private readonly PatientService _patientService;
 
@@ -14,56 +14,50 @@ public class PatientController: ControllerBase
     {
         _patientService = patientService;
     }
-    
-    
-    
+
+
     [HttpGet]
     [Route("patients")]
     public async Task<List<PatientDto>> GetPatientsAsync()
     {
-        var patients =  await _patientService.GetPatientsAsync();
-        return patients.Select(d => new PatientDto()
+        var patients = await _patientService.GetPatientsAsync();
+        return patients.Select(d => new PatientDto
         {
             Polis = d.Polis,
             Name = d.Name,
-            Age= d.Age,
+            Age = d.Age
         }).ToList();
     }
-    
+
     [HttpGet]
     [Route("patient/{polis}")]
     public async Task<IActionResult> GetPatientAsync(long polis)
     {
         var patient = await _patientService.GetPatientAsync(polis);
         if (patient == null) return NotFound();
-        var patientDto = new PatientDto()
+        var patientDto = new PatientDto
         {
             Polis = patient.Polis,
             Name = patient.Name,
-            Age= patient.Age,
-
+            Age = patient.Age
         };
-        return  Ok(patientDto);
+        return Ok(patientDto);
     }
-    
-    
+
+
     [HttpPost]
     [Route("patient")]
     public async Task<IActionResult> CreatePatient(PatientDto patientDto)
-    {   
-        if (!ModelState.IsValid)
-        {
-            return BadRequest();
-        }
-        
-        var patient = new Patient()
+    {
+        if (!ModelState.IsValid) return BadRequest();
+
+        var patient = new Patient
         {
             Polis = patientDto.Polis,
             Name = patientDto.Name,
-            Age= patientDto.Age,
-
+            Age = patientDto.Age
         };
-            
+
 
         await _patientService.AddPatientAsync(patient);
         return Ok();
@@ -73,24 +67,18 @@ public class PatientController: ControllerBase
     [Route("patient/{polis}")]
     public async Task<IActionResult> PutPatientAsync(long polis, PatientDto patientDto)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest();
-        }
+        if (!ModelState.IsValid) return BadRequest();
 
-        var patient = new Patient()
+        var patient = new Patient
         {
             Polis = patientDto.Polis,
             Name = patientDto.Name,
-            Age = patientDto.Age,
-
+            Age = patientDto.Age
         };
 
         var result = await _patientService.UpdatePatientAsync(polis, patient);
         if (result == false) return NotFound();
         return Ok();
-
-
     }
 
     [HttpDelete]
@@ -98,20 +86,20 @@ public class PatientController: ControllerBase
     public async Task<IActionResult> DeleteDoctorAsync(long polis)
     {
         var result = await _patientService.RemovePatientAsync(polis);
-        if (result == false) return NotFound(); 
+        if (result == false) return NotFound();
         return Ok();
     }
 
 
     [HttpGet]
-    [Route("Appontment/{polis}")]
-    public async Task<IActionResult> AllPatientAppontmentAsync(long polis)
+    [Route("Appointment/{polis}")]
+    public async Task<IActionResult> AllPatientAppointmentAsync(long polis)
     {
         var patient = await _patientService.GetPatientAsync(polis);
         if (patient.Name == null) return NotFound();
         var Appointments = await _patientService.GetAllPatientAppointmentAsync(polis);
 
-        return Ok(Appointments.Select(d => new AppontmentDto()
+        return Ok(Appointments.Select(d => new AppointmentDto
             {
                 Id = d.Id,
                 DoctorId = d.DoctorId,
@@ -120,32 +108,55 @@ public class PatientController: ControllerBase
                 EndVisit = d.EndVisit
             }
         ).ToList());
-
-
     }
-        /// <summary>
-        /// Все записи что предстоит посетить
-        /// </summary>
-        /// <param name="polis"> Полис пациента</param>
-        /// <returns> Лист записей</returns>
-        [HttpGet]
-        [Route("Appontment/{polis}")]
-        public async Task<IActionResult> AllPatientAppontmentToVisitAsync(long polis)
+
+    /// <summary>
+    ///     Все записи что предстоит посетить
+    /// </summary>
+    /// <param name="polis"> Полис пациента</param>
+    /// <returns> Лист записей</returns>
+    [HttpGet]
+    [Route("AppointmentsToVisit/{polis}")]
+    public async Task<IActionResult> AllPatientAppointmentToVisitAsync(long polis)
+    {
+        var patient = await _patientService.GetPatientAsync(polis);
+        if (patient.Name == null) return NotFound();
+        var Appointments = await _patientService.GetAllPatientAppointmentToVisitAsync(polis);
+
+        return Ok(Appointments.Select(d => new AppointmentDto
+            {
+                Id = d.Id,
+                DoctorId = d.DoctorId,
+                PatientPolis = d.PatientPolis,
+                StartVisit = d.StartVisit,
+                EndVisit = d.EndVisit
+            }
+        ).ToList());
+    }
+
+    /// <summary>
+    ///     Создание записи
+    /// </summary>
+    /// <param name="appointmentDto">модель записи</param>
+    /// <returns>Ок если объект был создан, badrequest если не гуд</returns>
+    [HttpPost]
+    [Route("Appointment")]
+    public async Task<IActionResult> CreateAppointmentAsync(AppointmentDto appointmentDto)
+    {
+        var appointment = new Appointment
         {
-            var patient = await _patientService.GetPatientAsync(polis);
-            if (patient.Name == null) return NotFound();
-            var Appointments = await _patientService.GetAllPatientAppointmentToVisitAsync(polis);
+            Id = null,
+            DoctorId = appointmentDto.DoctorId,
+            PatientPolis = appointmentDto.PatientPolis,
+            Status = false,
+            StartVisit = appointmentDto.StartVisit,
+            EndVisit = appointmentDto.EndVisit
+        };
+        var result = await _patientService.CreateAppointmentAsync(appointment);
+        if (result == false) return BadRequest();
+        return Ok();
+    }
 
-            return Ok(Appointments.Select(d => new AppontmentDto()
-                {
-                    Id = d.Id,
-                    DoctorId = d.DoctorId,
-                    PatientPolis = d.PatientPolis,
-                    StartVisit = d.StartVisit,
-                    EndVisit = d.EndVisit
-                }
-            ).ToList());
-        }
-        
-
+    //[HttpDelete]
+    //[Route("  ")]
 }
