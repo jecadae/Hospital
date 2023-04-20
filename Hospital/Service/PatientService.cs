@@ -11,27 +11,43 @@ public class PatientService : IHospitalService<Patient>
     {
         _context = context;
     }
-
-
+    
+    /// <summary>
+    /// Получить всех пациентов
+    /// </summary>
+    /// <returns>Лист пациентов</returns>
     public async Task<List<Patient>> GetAllAsync()
     {
         return await _context.Patients.AsNoTracking().Where(x => x.IsFired == false).ToListAsync();
     }
-
+    /// <summary>
+    /// Получить пациента по id
+    /// </summary>
+    /// <param name="InsuranceNumberId">id пациента</param>
+    /// <returns></returns>
     public async Task<Patient> GetByIdAsync(int InsuranceNumberId)
     {
         return await _context.Patients.AsNoTracking().Where(x => x.IsFired == false)
             .FirstOrDefaultAsync(x => x.InsuranceNumberId == InsuranceNumberId);
     }
 
-
+    /// <summary>
+    /// Создание пациента
+    /// </summary>
+    /// <param name="patient">модель пациента</param>
+    /// <returns> </returns>
     public async Task<bool> CreateAsync(Patient patient)
     {
         await _context.Patients.AddAsync(patient);
         await _context.SaveChangesAsync();
         return true;
     }
-
+    /// <summary>
+    /// Обновить пациента
+    /// </summary>
+    /// <param name="InsuranceNumberId">Id пациента</param>
+    /// <param name="patient">модель пациента</param>
+    /// <returns></returns>
     public async Task<bool> UpdateAsync(int InsuranceNumberId, Patient patient)
     {
         var result = await _context.Patients.Where(x => x.IsFired == false)
@@ -44,7 +60,11 @@ public class PatientService : IHospitalService<Patient>
         return true;
     }
 
-
+    /// <summary>
+    /// Удалить пациента
+    /// </summary>
+    /// <param name="InsuranceNumberId">id пациента</param>
+    /// <returns></returns>
     public async Task<bool> DeleteAsync(int InsuranceNumberId)
     {
         var result = _context.Patients.Where(x => x.IsFired == false)
@@ -81,7 +101,11 @@ public class PatientService : IHospitalService<Patient>
             x.InsuranceNumberId == InsuranceNumberId || x.IsFired == false ||
             x.StartVisit.Date > DateTimeProvider.UtcNow).ToListAsync();
     }
-
+    /// <summary>
+    /// Создание записи
+    /// </summary>
+    /// <param name="appointment">Модель записи</param>
+    /// <returns></returns>
     public async Task<bool> CreateAppointmentAsync(Appointment appointment)
     {
         var schedule =
@@ -98,7 +122,11 @@ public class PatientService : IHospitalService<Patient>
         return true;
     }
 
-
+    /// <summary>
+    /// Удалить запись
+    /// </summary>
+    /// <param name="id">id записей</param>
+    /// <returns></returns>
     public async Task<bool> DeleteAppointmentAsync(int id)
     {
         var result = await _context.Appointments.FirstOrDefaultAsync(x=>x.Id==id);

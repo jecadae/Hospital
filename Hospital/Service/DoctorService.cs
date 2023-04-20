@@ -81,7 +81,11 @@ public class DoctorService : IHospitalService<Doctor>
         await _context.SaveChangesAsync();
         return true;
     }
-
+    /// <summary>
+    /// Расписание доктора
+    /// </summary>
+    /// <param name="doctorId"> id доктора</param>
+    /// <returns> модель расписания</returns>
     public async Task<Schedule?> GetDoctorScheduleAsync(int doctorId)
     {
         var schedule = await _context.Schedules.FirstOrDefaultAsync(a => a.IsFired == false && a.DoctorId == doctorId);

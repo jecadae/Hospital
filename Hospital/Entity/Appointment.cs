@@ -2,6 +2,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Hospital.Entity;
 
+
+
+/// <summary>
+/// Модель записи
+/// </summary>
 public class Appointment
 {
     public int? Id { get; set; }

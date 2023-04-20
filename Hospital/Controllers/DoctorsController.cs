@@ -12,14 +12,17 @@ public class DoctorsController : ControllerBase
 {
     private readonly DoctorService _doctorService;
     private readonly IMapper _mapper;
-
+    
     public DoctorsController(DoctorService doctorService, IMapper mapper)
     {
         _doctorService = doctorService;
         _mapper = mapper;
     }
-
-
+    
+/// <summary>
+/// Получить всех докторов
+/// </summary>
+/// <returns> лист докторов</returns>
     [HttpGet]
     [Route("doctors")]
     public async Task<List<DoctorDto>> GetDoctorsAsync()
@@ -29,7 +32,11 @@ public class DoctorsController : ControllerBase
         return _mapper.Map<List<DoctorDto>>(doctors);
     }
 
-
+    /// <summary>
+    /// получение доктора по id
+    /// </summary>
+    /// <param name="id">id доктора</param>
+    /// <returns>Доктора</returns>
     [HttpGet]
     [Route("doctor/{id}")]
     public async Task<IActionResult> GetDoctorAsync(int id)
@@ -39,7 +46,11 @@ public class DoctorsController : ControllerBase
         var doctorDto = _mapper.Map<DoctorDto>(doctor);
         return Ok(doctorDto);
     }
-
+    /// <summary>
+    /// Создание доктора
+    /// </summary>
+    /// <param name="doctorDto">Модель доктора</param>
+    /// <returns>ок</returns>
     [HttpPost]
     [Route("doctor")]
     public async Task<IActionResult> CreateDoctor(DoctorDto doctorDto)
@@ -49,7 +60,12 @@ public class DoctorsController : ControllerBase
         await _doctorService.CreateAsync(doctor);
         return Ok();
     }
-
+    /// <summary>
+    /// Изменить существующего доктора
+    /// </summary>
+    /// <param name="id">id доктора</param>
+    /// <param name="doctorDto">Модель доктора</param>
+    /// <returns><ок/returns>
     [HttpPut]
     [Route("doctor/{id}")]
     public async Task<IActionResult> PutDoctorAsync(int id, DoctorDto doctorDto)
@@ -61,7 +77,11 @@ public class DoctorsController : ControllerBase
         if (result == false) return NotFound();
         return Ok();
     }
-
+    /// <summary>
+    /// удаление доктора
+    /// </summary>
+    /// <param name="id">id доктора</param>
+    /// <returns>ок</returns>
     [HttpDelete]
     [Route("doctor/{id}")]
     public async Task<IActionResult> DeleteDoctorAsync(int id)

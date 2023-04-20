@@ -1,7 +1,9 @@
 using Hospital.Enum;
 
 namespace Hospital.Entity;
-
+/// <summary>
+/// Модель доктора
+/// </summary>
 public class Doctor
 {
     public int Id { get; set; }

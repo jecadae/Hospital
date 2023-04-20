@@ -1,7 +1,7 @@
 namespace Hospital.Entity;
 
 /// <summary>
-///     Hcfc
+///     Модель расписания
 /// </summary>
 public class Schedule
 {

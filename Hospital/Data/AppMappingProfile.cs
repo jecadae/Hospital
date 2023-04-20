@@ -3,7 +3,9 @@ using Hospital.DTO;
 using Hospital.Entity;
 
 namespace Hospital.Data;
-
+/// <summary>
+/// конфиг маппера
+/// </summary>
 public class AppMappingProfile : Profile
 {
     public AppMappingProfile()

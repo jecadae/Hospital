@@ -17,7 +17,10 @@ public class PatientController : ControllerBase
         _patientService = patientService;
         _mapper = mapper;
     }
-
+    /// <summary>
+    /// Получить всех пациентов
+    /// </summary>
+    /// <returns> Лист пациентов</returns>
 
     [HttpGet]
     [Route("patients")]
@@ -26,7 +29,12 @@ public class PatientController : ControllerBase
         var patients = await _patientService.GetAllAsync();
         return _mapper.Map<List<PatientDto>>(patients);
     }
-
+    
+    /// <summary>
+    /// Получить пациента по id
+    /// </summary>
+    /// <param name="InsuranceNumberId"> id пациента </param>
+    /// <returns> Объект пациента</returns>
     [HttpGet]
     [Route("patient/{InsuranceNumberId}")]
     public async Task<IActionResult> GetPatientAsync(int InsuranceNumberId)
@@ -37,7 +45,11 @@ public class PatientController : ControllerBase
         return Ok(patientDto);
     }
 
-
+    /// <summary>
+    /// Создать пациента
+    /// </summary>
+    /// <param name="patientDto"> Модель пациента</param>
+    /// <returns> ок </returns>
     [HttpPost]
     [Route("patient")]
     public async Task<IActionResult> CreatePatient(PatientDto patientDto)
@@ -50,7 +62,12 @@ public class PatientController : ControllerBase
         await _patientService.CreateAsync(patient);
         return Ok();
     }
-
+    /// <summary>
+    /// Изменить существующего пациента
+    /// </summary>
+    /// <param name="InsuranceNumberId">id пациента</param>
+    /// <param name="patientDto"> Модель пациента</param>
+    /// <returns> ок</returns>
     [HttpPut]
     [Route("patient/{InsuranceNumberId}")]
     public async Task<IActionResult> PutPatientAsync(int InsuranceNumberId, PatientDto patientDto)
@@ -63,7 +80,11 @@ public class PatientController : ControllerBase
         if (result == false) return NotFound();
         return Ok();
     }
-
+    /// <summary>
+    /// Удалить пациента
+    /// </summary>
+    /// <param name="InsuranceNumberId">id пациента</param>
+    /// <returns></returns>
     [HttpDelete]
     [Route("patient/{InsuranceNumberId}")]
     public async Task<IActionResult> DeleteDoctorAsync(int InsuranceNumberId)
@@ -72,7 +93,11 @@ public class PatientController : ControllerBase
         if (result == false) return NotFound();
         return Ok();
     }
-
+    /// <summary>
+    /// Все записи пациента
+    /// </summary>
+    /// <param name="InsuranceNumberId">Id пациента</param>
+    /// <returns></returns>
 
     [HttpGet]
     [Route("Appointment/{InsuranceNumberId}")]
@@ -105,7 +130,7 @@ public class PatientController : ControllerBase
     ///     Создание записи
     /// </summary>
     /// <param name="appointmentDto">модель записи</param>
-    /// <returns>Ок если объект был создан, badrequest если не гуд</returns>
+    /// <returns>Ок если объект был создан, badrequest если нет</returns>
     [HttpPost]
     [Route("Appointment")]
     public async Task<IActionResult> CreateAppointmentAsync(AppointmentDto appointmentDto)
@@ -115,7 +140,11 @@ public class PatientController : ControllerBase
         if (result == false) return BadRequest();
         return Ok();
     }
-
+    /// <summary>
+    /// удалить запись
+    /// </summary>
+    /// <param name="id"> id записи</param>
+    /// <returns>ок</returns>
     [HttpDelete]
     [Route("Appointment/{id}")]
     public async Task<IActionResult> RemoveAppointmentAsync(int id)
