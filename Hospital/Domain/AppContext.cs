@@ -18,7 +18,7 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Doctor>()
+        modelBuilder.Entity<Doctor>().
             .HasKey(x => x.Id);
 
     }

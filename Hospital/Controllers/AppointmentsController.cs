@@ -82,14 +82,6 @@ public class AppointmentsController: ControllerBase
     
     
     
-    
-    /* [HttpPost]
-    [Route("test")]
 
-    public async Task<IActionResult> CreatePlanAsync()
-    {
-        Console.WriteLine("Регистрация девочки");
-        return Ok();
-    }*/
     
 }

@@ -52,8 +52,8 @@ public class PatientService : IHospitalService<Patient>
     {
         var result = await _context.Patients.Where(x => x.IsFired == false)
             .FirstOrDefaultAsync(x => x.InsuranceNumberId == InsuranceNumberId);
-        if (result == null) return false;
-
+        if (result == null) 
+            return false;
         result.Age = patient.Age;
         result.Name = patient.Name;
         await _context.SaveChangesAsync();

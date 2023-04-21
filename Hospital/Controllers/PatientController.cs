@@ -54,11 +54,7 @@ public class PatientController : ControllerBase
     [Route("patient")]
     public async Task<IActionResult> CreatePatient(PatientDto patientDto)
     {
-
-
         var patient = _mapper.Map<Patient>(patientDto);
-
-
         await _patientService.CreateAsync(patient);
         return Ok();
     }
