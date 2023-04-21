@@ -13,7 +13,7 @@ public class Schedule
     public DateTime EndLunch { get; set; }
     public int ReceptionInterval { get; set; }
     public List<DayOfWeek> WeekDay { get; set; }
-
+    
     public Doctor Doctor { get; set; }
     public bool IsFired { get; set; }
 }

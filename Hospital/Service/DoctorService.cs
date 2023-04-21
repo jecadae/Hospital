@@ -53,7 +53,8 @@ public class DoctorService : IHospitalService<Doctor>
     public async Task<bool> UpdateAsync(int id, Doctor doctor)
     {
         var result = await _context.Doctors.Where(x => x.IsFired == false).FirstOrDefaultAsync(x => x.Id == id);
-        if (result == null) return false;
+        if (result == null) 
+            return false;
 
         result.DoctorType = doctor.DoctorType;
         await _context.SaveChangesAsync();
@@ -61,7 +62,7 @@ public class DoctorService : IHospitalService<Doctor>
     }
 
     /// <summary>
-    ///     Удаление записи
+    ///     Удаление доктора
     /// </summary>
     /// <param name="id">id удаляемого доктора </param>
     /// <returns>true если успех, false если доктор был не найден</returns>
@@ -91,4 +92,5 @@ public class DoctorService : IHospitalService<Doctor>
         var schedule = await _context.Schedules.FirstOrDefaultAsync(a => a.IsFired == false && a.DoctorId == doctorId);
         return schedule;
     }
+    
 }

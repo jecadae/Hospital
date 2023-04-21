@@ -67,11 +67,11 @@ public class PatientService : IHospitalService<Patient>
     /// <returns></returns>
     public async Task<bool> DeleteAsync(int InsuranceNumberId)
     {
-        var result = _context.Patients.Where(x => x.IsFired == false)
+        var result = await _context.Patients.Where(x => x.IsFired == false)
             .FirstOrDefaultAsync(x => x.InsuranceNumberId == InsuranceNumberId);
-        if (result.Result == null) return false;
-
-        result.Result.IsFired = true;
+        if (result == null) return false;
+        result.IsFired = true;
+        await _context.Appointments.Where(x => x.InsuranceNumberId == result.InsuranceNumberId).ExecuteUpdateAsync(s => s.SetProperty(t => t.IsFired, t => !t.IsFired));
         await _context.SaveChangesAsync();
         return true;
     }
@@ -101,38 +101,7 @@ public class PatientService : IHospitalService<Patient>
             x.InsuranceNumberId == InsuranceNumberId || x.IsFired == false ||
             x.StartVisit.Date > DateTimeProvider.UtcNow).ToListAsync();
     }
-    /// <summary>
-    /// Создание записи
-    /// </summary>
-    /// <param name="appointment">Модель записи</param>
-    /// <returns></returns>
-    public async Task<bool> CreateAppointmentAsync(Appointment appointment)
-    {
-        var schedule =
-            await _context.Schedules.AsNoTracking()
-                .FirstOrDefaultAsync(a => a.IsFired == false && a.DoctorId == appointment.DoctorId);
-        if (schedule == null) return false;
-        if (schedule.WeekDay.Contains(appointment.StartVisit.DayOfWeek) == false) return false;
-        var result = await _context.Appointments.AsNoTracking().Where(a =>
-                a.IsFired == false && a.DoctorId == appointment.DoctorId && a.StartVisit == appointment.StartVisit)
-            .ToListAsync();
-        if (result.Count == 0) return false;
-        await _context.Appointments.AddAsync(appointment);
-        await _context.SaveChangesAsync();
-        return true;
-    }
 
-    /// <summary>
-    /// Удалить запись
-    /// </summary>
-    /// <param name="id">id записей</param>
-    /// <returns></returns>
-    public async Task<bool> DeleteAppointmentAsync(int id)
-    {
-        var result = await _context.Appointments.FirstOrDefaultAsync(x=>x.Id==id);
-        if (result == null) return false;
-        result.IsFired = true;
-        await _context.SaveChangesAsync();
-        return true;
-    }
+
+
 }

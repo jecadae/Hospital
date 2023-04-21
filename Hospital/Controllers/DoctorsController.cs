@@ -23,13 +23,10 @@ public class DoctorsController : ControllerBase
 /// Получить всех докторов
 /// </summary>
 /// <returns> лист докторов</returns>
-    [HttpGet]
-    [Route("doctors")]
-    public async Task<List<DoctorDto>> GetDoctorsAsync()
+    [HttpGet("doctors")]
+public async Task<List<DoctorDto>> GetDoctorsAsync()
     {
-        var doctors = await _doctorService.GetAllAsync();
-
-        return _mapper.Map<List<DoctorDto>>(doctors);
+        var doctors = await _doctorService.GetAllAsync(); return _mapper.Map<List<DoctorDto>>(doctors);
     }
 
     /// <summary>
@@ -42,9 +39,10 @@ public class DoctorsController : ControllerBase
     public async Task<IActionResult> GetDoctorAsync(int id)
     {
         var doctor = await _doctorService.GetByIdAsync(id);
-        if (doctor == null) return NotFound();
-        var doctorDto = _mapper.Map<DoctorDto>(doctor);
-        return Ok(doctorDto);
+        if (doctor == null) 
+            return NotFound();
+        return Ok(_mapper.Map<DoctorDto>(doctor));
+        
     }
     /// <summary>
     /// Создание доктора
@@ -55,7 +53,6 @@ public class DoctorsController : ControllerBase
     [Route("doctor")]
     public async Task<IActionResult> CreateDoctor(DoctorDto doctorDto)
     {
-        if (!ModelState.IsValid) return BadRequest();
         var doctor = _mapper.Map<Doctor>(doctorDto);
         await _doctorService.CreateAsync(doctor);
         return Ok();
@@ -70,11 +67,10 @@ public class DoctorsController : ControllerBase
     [Route("doctor/{id}")]
     public async Task<IActionResult> PutDoctorAsync(int id, DoctorDto doctorDto)
     {
-        if (!ModelState.IsValid) return BadRequest();
-
         var doctor = _mapper.Map<Doctor>(doctorDto);
         var result = await _doctorService.UpdateAsync(id, doctor);
-        if (result == false) return NotFound();
+        if (result == false) 
+            return NotFound();
         return Ok();
     }
     /// <summary>
@@ -87,7 +83,21 @@ public class DoctorsController : ControllerBase
     public async Task<IActionResult> DeleteDoctorAsync(int id)
     {
         var result = await _doctorService.DeleteAsync(id);
-        if (result == false) return NotFound();
+        if (result == false) 
+            return NotFound();
         return Ok();
+    }
+
+
+    [HttpGet]
+    [Route("schedule/{id}")]
+    public async Task<IActionResult> GetSchedule(int id)
+    {
+        var result = await _doctorService.GetDoctorScheduleAsync(id);
+        if (result == null) 
+            return NotFound();
+
+
+        return Ok(result);
     }
 }

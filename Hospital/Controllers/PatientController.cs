@@ -37,9 +37,9 @@ public class PatientController : ControllerBase
     /// <returns> Объект пациента</returns>
     [HttpGet]
     [Route("patient/{InsuranceNumberId}")]
-    public async Task<IActionResult> GetPatientAsync(int InsuranceNumberId)
+    public async Task<IActionResult> GetPatientAsync(int insuranceNumberId)
     {
-        var patient = await _patientService.GetByIdAsync(InsuranceNumberId);
+        var patient = await _patientService.GetByIdAsync(insuranceNumberId);
         if (patient == null) return NotFound();
         var patientDto = _mapper.Map<PatientDto>(patient);
         return Ok(patientDto);
@@ -54,7 +54,7 @@ public class PatientController : ControllerBase
     [Route("patient")]
     public async Task<IActionResult> CreatePatient(PatientDto patientDto)
     {
-        if (!ModelState.IsValid) return BadRequest();
+
 
         var patient = _mapper.Map<Patient>(patientDto);
 
@@ -70,14 +70,15 @@ public class PatientController : ControllerBase
     /// <returns> ок</returns>
     [HttpPut]
     [Route("patient/{InsuranceNumberId}")]
-    public async Task<IActionResult> PutPatientAsync(int InsuranceNumberId, PatientDto patientDto)
+    public async Task<IActionResult> PutPatientAsync(int insuranceNumberId, PatientDto patientDto)
     {
-        if (!ModelState.IsValid) return BadRequest();
+
 
         var patient = _mapper.Map<Patient>(patientDto);
 
-        var result = await _patientService.UpdateAsync(InsuranceNumberId, patient);
-        if (result == false) return NotFound();
+        var result = await _patientService.UpdateAsync(insuranceNumberId, patient);
+        if (result == false) 
+            return NotFound();
         return Ok();
     }
     /// <summary>
@@ -87,10 +88,11 @@ public class PatientController : ControllerBase
     /// <returns></returns>
     [HttpDelete]
     [Route("patient/{InsuranceNumberId}")]
-    public async Task<IActionResult> DeleteDoctorAsync(int InsuranceNumberId)
+    public async Task<IActionResult> DeleteDoctorAsync(int insuranceNumberId)
     {
-        var result = await _patientService.DeleteAsync(InsuranceNumberId);
-        if (result == false) return NotFound();
+        var result = await _patientService.DeleteAsync(insuranceNumberId);
+        if (result == false) 
+            return NotFound();
         return Ok();
     }
     /// <summary>
@@ -101,11 +103,12 @@ public class PatientController : ControllerBase
 
     [HttpGet]
     [Route("Appointment/{InsuranceNumberId}")]
-    public async Task<IActionResult> AllPatientAppointmentAsync(int InsuranceNumberId)
+    public async Task<IActionResult> AllPatientAppointmentAsync(int insuranceNumberId)
     {
-        var patient = await _patientService.GetByIdAsync(InsuranceNumberId);
-        if (patient.Name == null) return NotFound();
-        var appointments = await _patientService.GetAllPatientAppointmentAsync(InsuranceNumberId);
+        var patient = await _patientService.GetByIdAsync(insuranceNumberId);
+        if (patient.Name == null) 
+            return NotFound();
+        var appointments = await _patientService.GetAllPatientAppointmentAsync(insuranceNumberId);
 
         return Ok(_mapper.Map<List<AppointmentDto>>(appointments));
     }
@@ -117,42 +120,17 @@ public class PatientController : ControllerBase
     /// <returns> Лист записей</returns>
     [HttpGet]
     [Route("AppointmentsToVisit/{InsuranceNumberId}")]
-    public async Task<IActionResult> AllPatientAppointmentToVisitAsync(int InsuranceNumberId)
+    public async Task<IActionResult> AllPatientAppointmentToVisitAsync(int insuranceNumberId)
     {
-        var patient = await _patientService.GetByIdAsync(InsuranceNumberId);
-        if (patient.Name == null) return NotFound();
-        var appointments = await _patientService.GetAllPatientAppointmentToVisitAsync(InsuranceNumberId);
-
+        var patient = await _patientService.GetByIdAsync(insuranceNumberId);
+        if (patient.Name == null) 
+            return NotFound();
+        var appointments = await _patientService.GetAllPatientAppointmentToVisitAsync(insuranceNumberId);
         return Ok(_mapper.Map<List<AppointmentDto>>(appointments));
     }
 
-    /// <summary>
-    ///     Создание записи
-    /// </summary>
-    /// <param name="appointmentDto">модель записи</param>
-    /// <returns>Ок если объект был создан, badrequest если нет</returns>
-    [HttpPost]
-    [Route("Appointment")]
-    public async Task<IActionResult> CreateAppointmentAsync(AppointmentDto appointmentDto)
-    {
-        var appointment = _mapper.Map<Appointment>(appointmentDto);
-        var result = await _patientService.CreateAppointmentAsync(appointment);
-        if (result == false) return BadRequest();
-        return Ok();
-    }
-    /// <summary>
-    /// удалить запись
-    /// </summary>
-    /// <param name="id"> id записи</param>
-    /// <returns>ок</returns>
-    [HttpDelete]
-    [Route("Appointment/{id}")]
-    public async Task<IActionResult> RemoveAppointmentAsync(int id)
-    {
-        var result = await _patientService.DeleteAppointmentAsync(id);
-        if (result == false) return BadRequest();
-        return Ok();
-    }
+
+
     
     
     

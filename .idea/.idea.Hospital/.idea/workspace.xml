@@ -5,8 +5,26 @@
     <projectFile profileName="https">Hospital/Hospital.csproj</projectFile>
     <projectFile profileName="IIS Express">Hospital/Hospital.csproj</projectFile>
   </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="0fa09586-09b7-4945-976d-0cbddcbadab2" name="Changes" comment="" />
+    <list default="true" id="0fa09586-09b7-4945-976d-0cbddcbadab2" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Hospital/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Hospital/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hospital/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/Hospital/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hospital/Controllers/DoctorsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Hospital/Controllers/DoctorsController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hospital/Controllers/PatientController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Hospital/Controllers/PatientController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hospital/Data/AppContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Hospital/Domain/AppContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hospital/Data/AppMappingProfile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Hospital/Domain/AppMappingProfile.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hospital/Entity/Appointment.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Hospital/Domain/Models/Appointment.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hospital/Entity/Doctor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Hospital/Domain/Models/Doctor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hospital/Entity/Patient.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Hospital/Domain/Models/Patient.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hospital/Entity/Schedule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Hospital/Domain/Models/Schedule.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hospital/Hospital.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Hospital/Hospital.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hospital/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Hospital/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hospital/Service/DoctorService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Hospital/Service/DoctorService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hospital/Service/PatientService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Hospital/Service/PatientService.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,6 +32,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f9daeeaab8409865442b5e80e634dc64dae9a14892fe81e0f17b46f51b2c48f8/DbSet.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/a13a23687b565d3b3ca279dd8e2bfd1d74d49132851d9dcc489eaad1431ff/ServiceCollectionExtensions.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -28,6 +47,10 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Language Defaults" />
     <property name="vue.rearranger.settings.migration" value="true" />
@@ -93,14 +116,28 @@
       <workItem from="1681804268940" duration="15000" />
       <workItem from="1681805836377" duration="191000" />
       <workItem from="1681871221280" duration="7506000" />
+      <workItem from="1682054564639" duration="1111000" />
+      <workItem from="1682060803467" duration="4562000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>
